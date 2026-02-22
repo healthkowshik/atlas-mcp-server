@@ -150,40 +150,26 @@ class TestAtlasPlayRejections:
 
     async def test_already_used_word_rejected(self, atlas_client: Client) -> None:
         """A repeated word is rejected with ❌ and 'already' in the message."""
-        for _ in range(20):
+        # Strategy: play a self-looping word (starts AND ends with 'a') so the
+        # required letter stays 'a' after the server's turn (18/25 'a' words also
+        # end in 'a'). When the letter is still 'a', replaying the same word
+        # hits the already_used rule unambiguously.
+        for _ in range(30):
             resp = await call(atlas_client, "atlas_start")
-            if "you go first" in resp.lower():
-                # Play "india" (valid)
-                await call(atlas_client, "atlas_play", {"word": "india"})
-                # Now required_letter is 'a', server plays a word ending in some letter.
-                # We can't resubmit "india" now because required_letter changed.
-                # Instead, call start again (which resets), play india, server plays something.
-                # Then call start again, play india again.
-                # But session is per call. The simplest: use atlas_start + atlas_play(india)
-                # then atlas_start again + atlas_play(india) = always fresh. No repeat possible.
-                #
-                # Better: user goes first, plays "india", then server plays some word ending X.
-                # Now it's user's turn with required_letter = last letter of server's word.
-                # If last letter of server's word happens to be 'i', user can submit "india" again.
-                # That's too fragile. Instead: just verify the rejection happens within
-                # a single chain. We need to get required_letter back to 'i'.
-                # Use a controlled trick: find an 'a'-word in corpus that ends in 'i'.
-                from atlas.geography import names_starting_with
-
-                a_words_ending_i = [w for w in names_starting_with("a") if w.endswith("i")]
-                if not a_words_ending_i:
-                    pytest.skip("No 'a' words ending in 'i' in corpus")
-                word_a = a_words_ending_i[0]
-                server_resp = await call(atlas_client, "atlas_play", {"word": word_a})
-                if "No game" in server_resp:
-                    continue
-                # Now required_letter might be what server ended on, or user plays again.
-                # Regardless, try submitting "india" again — it's already played.
-                result = await call(atlas_client, "atlas_play", {"word": "india"})
-                # May be wrong_letter OR already_used, but if required_letter='i', it's already_used
-                assert "❌" in result
-                return
-        pytest.skip("Could not set up already_used scenario")
+            if "you go first" not in resp.lower():
+                continue
+            r1 = await call(atlas_client, "atlas_play", {"word": "andorra"})
+            if "✅" not in r1:
+                continue
+            # Server responded; check whether required letter is still 'a'
+            if "« A »" not in r1:
+                continue  # server picked an a→non-a word; retry
+            # Required letter is 'a' and 'andorra' is already played — replay it
+            result = await call(atlas_client, "atlas_play", {"word": "andorra"})
+            assert "❌" in result
+            assert "already" in result.lower()
+            return
+        pytest.skip("Could not set up already_used scenario in 30 attempts")
 
     async def test_invalid_word_does_not_end_game(self, atlas_client: Client) -> None:
         """After an invalid submission, a valid word (same required letter) is accepted."""
