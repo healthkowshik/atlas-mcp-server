@@ -9,7 +9,11 @@
       "WebFetch(domain:gofastmcp.com)",
       "WebSearch",
       "Bash(.specify/scripts/bash/update-agent-context.sh claude:*)",
-      "Bash(.specify/scripts/bash/check-prerequisites.sh:*)"
+      "Bash(.specify/scripts/bash/check-prerequisites.sh:*)",
+      "Bash(mkdir:*)",
+      "Bash(tail:*)",
+      "Bash(uv run:*)",
+      "Bash(python3:*)"
     ]
   }
 }

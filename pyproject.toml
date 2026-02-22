@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "atlas-mcp-server"
+version = "0.1.0"
+description = "ATLAS geographic word-chaining game as an MCP server"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "geonamescache>=2.0",
+    "pycountry>=24.6",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/atlas"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
