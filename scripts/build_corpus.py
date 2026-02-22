@@ -6,9 +6,8 @@ Run once (dev-time only):
 Outputs: src/atlas/data/geo_corpus.json — a sorted JSON array of lowercase,
 diacritic-normalised geographic names drawn from:
   - 7 hardcoded continents
-  - pycountry ISO 3166-1 (countries + aliases)
-  - pycountry ISO 3166-2 (all administrative subdivisions)
-  - geonamescache cities with population >= 500,000
+  - pycountry ISO 3166-1 (countries + common/official name aliases)
+  - geonamescache top 100 cities by population
 
 Runtime server has zero dependency on this script or its packages.
 """
@@ -34,6 +33,8 @@ CONTINENTS = [
     "South America",
 ]
 
+TOP_CITIES = 100
+
 
 def normalize(name: str) -> str:
     """Lowercase, strip diacritics/combining chars, strip surrounding whitespace."""
@@ -48,7 +49,7 @@ def build() -> list[str]:
     for c in CONTINENTS:
         names.add(normalize(c))
 
-    # Countries (ISO 3166-1)
+    # Countries (ISO 3166-1) — name, common_name, official_name
     for country in pycountry.countries:
         names.add(normalize(country.name))
         if hasattr(country, "common_name"):
@@ -56,15 +57,15 @@ def build() -> list[str]:
         if hasattr(country, "official_name"):
             names.add(normalize(country.official_name))
 
-    # Administrative subdivisions (ISO 3166-2: US states, Indian states, etc.)
-    for sub in pycountry.subdivisions:
-        names.add(normalize(sub.name))
-
-    # Major cities (population >= 500,000)
+    # Top 100 cities by population
     gc = geonamescache.GeonamesCache()
-    for city in gc.get_cities().values():
-        if city["population"] >= 500_000:
-            names.add(normalize(city["name"]))
+    all_cities = sorted(
+        gc.get_cities().values(),
+        key=lambda c: c["population"],
+        reverse=True,
+    )
+    for city in all_cities[:TOP_CITIES]:
+        names.add(normalize(city["name"]))
 
     # Remove empty strings that might arise from whitespace-only names
     names.discard("")

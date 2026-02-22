@@ -18,7 +18,6 @@ dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.24",
     "ruff>=0.6",
-    "mypy>=1.11",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -34,6 +33,8 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
 
-[tool.mypy]
-strict = true
-python_version = "3.12"
+
+[dependency-groups]
+dev = [
+    "ty>=0.0.18",
+]

@@ -110,7 +110,7 @@ uv run pytest --cov=atlas --cov-report=term-missing
 # Lint + type check
 uv run ruff check src/ tests/
 uv run ruff format --check src/ tests/
-uv run mypy src/
+uv run ty check src/
 ```
 
 ---

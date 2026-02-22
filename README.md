@@ -74,7 +74,7 @@ uv run pytest
 # Lint + format + type check
 uv run ruff check src/ tests/
 uv run ruff format src/ tests/
-uv run mypy src/
+uv run ty check src/
 ```
 
 ## Project structure

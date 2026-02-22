@@ -44,7 +44,7 @@ def build_game_session(
 
 async def get_session(ctx: Any) -> dict[str, Any] | None:
     """Load the current GameSession from FastMCP session state."""
-    return await ctx.get_state(SESSION_KEY)  # type: ignore[no-any-return]
+    return await ctx.get_state(SESSION_KEY)
 
 
 async def save_session(ctx: Any, session: dict[str, Any]) -> None:

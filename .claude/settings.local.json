@@ -13,7 +13,8 @@
       "Bash(mkdir:*)",
       "Bash(tail:*)",
       "Bash(uv run:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(echo not installed:*)"
     ]
   }
 }
