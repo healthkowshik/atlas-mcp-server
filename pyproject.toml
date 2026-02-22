@@ -20,6 +20,9 @@ dev = [
     "ruff>=0.6",
 ]
 
+[project.scripts]
+start = "atlas.server:main"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/atlas"]
 

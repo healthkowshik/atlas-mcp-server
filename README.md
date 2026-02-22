@@ -56,8 +56,13 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "atlas-game": {
       "command": "uv",
-      "args": ["run", "python", "-m", "atlas.server"],
-      "cwd": "/path/to/atlas-mcp-server"
+      "args": [
+        "run",
+        "--frozen",
+        "--directory",
+        "/path/to/atlas-mcp-server",
+        "start"
+      ]
     }
   }
 }

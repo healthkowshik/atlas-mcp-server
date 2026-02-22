@@ -7,8 +7,6 @@ Provides:
 - Last-letter extraction with diacritic/punctuation stripping
 """
 
-from __future__ import annotations
-
 import random
 import unicodedata
 from typing import Any

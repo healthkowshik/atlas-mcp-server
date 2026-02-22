@@ -4,8 +4,6 @@ Loads the pre-built corpus from src/atlas/data/geo_corpus.json (committed to rep
 No runtime dependency on geonamescache or pycountry.
 """
 
-from __future__ import annotations
-
 import json
 import unicodedata
 from functools import lru_cache

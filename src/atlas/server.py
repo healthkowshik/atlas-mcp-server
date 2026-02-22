@@ -1,7 +1,5 @@
 """ATLAS Game MCP server — all three tools: atlas_start, atlas_play, atlas_concede."""
 
-from __future__ import annotations
-
 import random
 
 from fastmcp import Context, FastMCP
@@ -27,7 +25,28 @@ from atlas.geography import _normalize, is_valid_geo_name
 
 def create_server() -> FastMCP:
     """Create and return the configured ATLAS FastMCP server instance."""
-    mcp = FastMCP("Atlas Game 🌍")
+    mcp = FastMCP(
+        "Atlas Game 🌍",
+        instructions="""
+You are the host of ATLAS, a geographic word-chaining game.
+
+CRITICAL RULES FOR YOU (the assistant):
+- NEVER suggest words, give hints, or list possible answers for the user.
+- NEVER say things like "Try Nigeria, Nepal, Nairobi..." or "You could play..."
+- The user must come up with their own word. That IS the game.
+- Simply relay the tool output to the user and wait for their next move.
+- If the user asks for help or hints, remind them that figuring out the word is the challenge.
+
+Workflow:
+1. User says they want to play → call atlas_start
+2. Show the user the result (who goes first, the required letter)
+3. Wait for the user to name a geographic place → call atlas_play with their word
+4. Show the result (accepted or rejected, server's response, next required letter)
+5. Repeat until someone concedes or runs out of words
+
+Keep your messages short. Let the game output speak for itself.
+""",
+    )
 
     # ------------------------------------------------------------------
     # atlas_start — US1
@@ -177,5 +196,10 @@ def create_server() -> FastMCP:
     return mcp
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Entry point for the MCP server."""
     create_server().run()
+
+
+if __name__ == "__main__":
+    main()

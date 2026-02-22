@@ -1,7 +1,5 @@
 """Display helpers — format all ATLAS game messages as rich Unicode strings."""
 
-from __future__ import annotations
-
 _TITLE_BOX = """\
 ╔══════════════════════════════════════╗
 ║                                      ║
