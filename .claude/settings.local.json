@@ -3,7 +3,12 @@
     "allow": [
       "WebFetch(domain:github.com)",
       "Bash(git fetch:*)",
-      "Bash(.specify/scripts/bash/create-new-feature.sh:*)"
+      "Bash(.specify/scripts/bash/create-new-feature.sh:*)",
+      "Bash(.specify/scripts/bash/setup-plan.sh:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:gofastmcp.com)",
+      "WebSearch",
+      "Bash(.specify/scripts/bash/update-agent-context.sh claude:*)"
     ]
   }
 }
